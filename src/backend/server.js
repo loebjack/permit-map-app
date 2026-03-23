@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const Database = require('better-sqlite3');
 const path = require('path');
+const os = require('os');
 
 const app = express();
 const PORT = 3000;
@@ -16,13 +17,15 @@ const db = new Database(path.join(__dirname, '../../data/permits.db'));
 // Routes
 app.get('/api/permits', (req, res) => {
   try {
-    const { startDate, endDate, permitType, sourceType } = req.query;
+    const { startDate, endDate, permitType, sourceType, requireCoords } = req.query;
     
     let query = 'SELECT * FROM permits WHERE 1=1';
     const params = [];
     
-    // Only show permits with coordinates
-    query += ' AND latitude IS NOT NULL AND longitude IS NOT NULL';
+    // Optionally require coordinates (default: show all)
+    if (requireCoords === 'true') {
+      query += ' AND latitude IS NOT NULL AND longitude IS NOT NULL';
+    }
     
     if (startDate) {
       query += ' AND (date_received >= ? OR change_date >= ?)';
@@ -93,8 +96,26 @@ app.get('/api/stats', (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+  // Get local IP address
+  const networkInterfaces = os.networkInterfaces();
+  let localIP = 'localhost';
+  
+  for (const interfaceName in networkInterfaces) {
+    for (const iface of networkInterfaces[interfaceName]) {
+      // Skip internal and non-IPv4 addresses
+      if (iface.family === 'IPv4' && !iface.internal) {
+        localIP = iface.address;
+        break;
+      }
+    }
+  }
+  
+  console.log(`\n${'='.repeat(60)}`);
+  console.log('Server running on:');
+  console.log(`  Local:    http://localhost:${PORT}`);
+  console.log(`  Network:  http://${localIP}:${PORT}`);
+  console.log(`${'='.repeat(60)}\n`);
   
   // Log some stats on startup
   try {

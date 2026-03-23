@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Map from './components/Map';
 import Sidebar from './components/Sidebar';
-
-const API_URL = 'http://localhost:3000/api';
+import { API_URL } from './config';
 
 function App() {
   const [permits, setPermits] = useState([]);
