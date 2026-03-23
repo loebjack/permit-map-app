@@ -6,7 +6,7 @@
 "scripts": {
   "dev": "concurrently \"npm run server\" \"npm run frontend\"",
   "server": "nodemon src/backend/server.js",
-  "frontend": "vite",
+  "frontend": "vite --host 0.0.0.0",
   "build": "vite build",
   "db:init": "node src/backend/scripts/initDatabase.js",
   "data:fetch": "node src/backend/scripts/fetchAllPermits.js",
