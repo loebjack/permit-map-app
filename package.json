@@ -1,0 +1,56 @@
+{
+  "name": "permit-map-app",
+  "version": "1.0.0",
+  "description": "Portland Permit Map Generator",
+  "main": "electron.js",
+"scripts": {
+  "dev": "concurrently \"npm run server\" \"npm run frontend\"",
+  "server": "nodemon src/backend/server.js",
+  "frontend": "vite",
+  "build": "vite build",
+  "db:init": "node src/backend/scripts/initDatabase.js",
+  "data:fetch": "node src/backend/scripts/fetchAllPermits.js",
+  "data:stats": "node src/backend/scripts/fetchAllPermits.js --stats",
+  "data:fetch-one": "node src/backend/scripts/fetchAllPermits.js",
+  "build:mac": "electron-builder --mac",
+  "start": "electron ."
+},
+  "build": {
+    "appId": "com.permitmap.app",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": [
+        "dmg"
+      ]
+    },
+    "files": [
+      "dist/**/*",
+      "electron.js",
+      "src/backend/**/*",
+      "data/**/*"
+    ]
+  },
+  "dependencies": {
+    "axios": "^1.13.3",
+    "better-sqlite3": "^12.6.2",
+    "cheerio": "^1.2.0",
+    "cors": "^2.8.6",
+    "electron": "^40.0.0",
+    "express": "^5.2.1",
+    "leaflet": "^1.9.4",
+    "puppeteer": "^24.36.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.0.10",
+    "@vitejs/plugin-react": "^5.1.2",
+    "concurrently": "^9.2.1",
+    "electron-builder": "^26.4.0",
+    "nodemon": "^3.1.11",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.1"
+  }
+}

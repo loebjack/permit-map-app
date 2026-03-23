@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Database files
+data/*.db
+data/*.db-shm
+data/*.db-wal
+
+# Cache files
+cache/*
+!cache/.gitkeep
+
+# Build outputs
+dist/
+dist-electron/
+build/
+*.local
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Electron build artifacts
+out/
+*.dmg
+*.app
+*.AppImage
+*.deb
+
+# Export files (optional - uncomment if you don't want to track these)
+# exports/*.pdf
+# exports/*.png
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Testing
+coverage/
+.nyc_output/
+
+# Misc
+.cache/
+.parcel-cache/
+*.bu
+*.bu*
