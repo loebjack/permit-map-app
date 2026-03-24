@@ -31,6 +31,8 @@ function App() {
   };
 
   const fetchPermits = async () => {
+  	setLoading(true);
+  	console.log('Fetching with filters:', filters);
     setLoading(true);
     try {
       const params = new URLSearchParams();

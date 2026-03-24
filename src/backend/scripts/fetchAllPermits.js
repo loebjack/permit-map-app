@@ -245,8 +245,8 @@ class ComprehensivePermitScraper {
       type_of_use: permit['TYPE OF USE'] || permit['type_of_use'],
       description_of_work: permit['DESCRIPTION OF WORK'] || permit['description_of_work'],
       valuation: this.parseNumber(permit['VALUATION'] || permit['valuation']),
-      date_received: permit['DATE RECEIVED'] || permit['date_received'],
-      date_issued: permit['DATE ISSUED'] || permit['date_issued'],
+      date_received: this.parseDate(permit['DATE RECEIVED'] || permit['date_received']),
+      date_issued:   this.parseDate(permit['DATE ISSUED']   || permit['date_issued']),
       status: permit['STATUS'] || permit['status'] || 'Unknown',
       ivr_number: permit['IVR NUMBER'] || permit['ivr_number'],
       property_legal_description: permit['PROPERTY LEGAL DESCRIPTION'] || permit['property_legal_description'],
@@ -287,9 +287,9 @@ class ComprehensivePermitScraper {
       source_type: 'address',
       address: permit['LOCATION'] || permit['location'],
       address_id: this.parseNumber(permit['ADDRESS ID'] || permit['address_id']),
-      create_date: permit['CREATE DATE'] || permit['create_date'],
-      change_date: permit['CHANGE DATE'] || permit['change_date'],
-      retired_date: permit['RETIRED DATE'] || permit['retired_date'],
+      create_date:   this.parseDate(permit['CREATE DATE']   || permit['create_date']),
+      change_date:   this.parseDate(permit['CHANGE DATE']   || permit['change_date']),
+      retired_date:  this.parseDate(permit['RETIRED DATE']  || permit['retired_date']),
       comment: permit['COMMENT'] || permit['comment'],
       location: permit['LOCATION'] || permit['location'],
       address_status: permit['ADDRESS STATUS'] || permit['address_status'],
@@ -333,6 +333,27 @@ class ComprehensivePermitScraper {
     const num = parseInt(str.replace(/[^0-9-]/g, ''));
     return isNaN(num) ? null : num;
   }
+
+  parseDate(str) {
+    if (!str) return null;
+  
+    // Strip ALL characters that aren't digits, slashes, spaces, colons, or hyphens
+    // This catches zero-width spaces, non-breaking spaces, and any other invisible chars
+    // regardless of their unicode codepoint
+    const cleaned = str.replace(/[^\d\/\s\:\-]/g, '').trim();
+  
+    // Already ISO format (date only)
+    if (/^\d{4}-\d{2}-\d{2}$/.test(cleaned)) return cleaned;
+  
+    // MM/DD/YYYY or MM/DD/YYYY HH:MM → YYYY-MM-DD (time portion ignored)
+    const match = cleaned.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+    if (match) {
+      const [, m, d, y] = match;
+      return `${y}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
+    }
+  
+    return null;
+}
 
   async geocodeAddress(address) {
     if (!address) return { latitude: null, longitude: null };
